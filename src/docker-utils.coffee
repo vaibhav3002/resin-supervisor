@@ -1,6 +1,5 @@
 Docker = require 'dockerode'
 Promise = require 'bluebird'
-request = Promise.promisifyAll require('request')
 { spawn } = require 'child_process'
 progress = require 'request-progress'
 config = require './config'
@@ -87,13 +86,13 @@ exports.rsyncImageWithProgress = (image, onProgress) ->
 						else
 							resolve()
 
-					progress request.get("#{config.deltaEndpoint}/api/v1/delta?src=#{repoTag}&dest=#{image}")
+					progress request.get("#{config.deltaEndpoint}/api/v1/delta?src=#{repoTag}&dest=#{image}", timeout: 0)
 					.on 'progress', onProgress
 					.on 'response', ({statusCode}) -> reject() if statusCode isnt 200
 					.on 'error', reject
 					.pipe rsync.stdin
 
-				config = request.getAsync("#{config.deltaEndpoint}/api/v1/config?image=#{image}", json: true)
+				config = request.getAsync("#{config.deltaEndpoint}/api/v1/config?image=#{image}", {json: true, timeout: 0})
 
 				Promise.all [ config, delta ]
 			.get(0)
