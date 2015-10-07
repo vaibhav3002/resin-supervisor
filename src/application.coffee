@@ -129,10 +129,7 @@ fetch = (app) ->
 		logSystemEvent(logTypes.downloadApp, app)
 		device.updateState(status: 'Downloading')
 
-		if app.env.RESIN_DELTA?
-			fetchPromise = dockerUtils.rsyncImageWithProgress(app.imageId, onProgress)
-		else
-			fetchPromise = dockerUtils.fetchImageWithProgress(app.imageId, onProgress)
+		fetchPromise = dockerUtils.rsyncImageWithProgress(app.imageId, onProgress)
 
 		fetchPromise.then ->
 			logSystemEvent(logTypes.downloadAppSuccess, app)
