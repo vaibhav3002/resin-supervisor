@@ -4,7 +4,9 @@ VOLUME /var/lib/docker
 VOLUME /resin-data
 
 RUN apt-get update \
-	&& apt-get install -y ifupdown \
+	&& apt-get install -y \
+	ifupdown \
+	dropbear \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV DOCKER_VERSION 1.6.2
@@ -15,7 +17,10 @@ RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 36A
 	&& apt-get update && apt-get install -y lxc-docker-${DOCKER_VERSION} \
 	&& rm -rf /var/lib/apt/lists/*
 
+RUN passwd -d root
+
 COPY config/openvpn/ /etc/openvpn/
+COPY config/dropbear/config /etc/default/dropbear
 COPY config/services/ /etc/systemd/system/
 COPY resin-vars vpn-init /usr/src/app/
 
