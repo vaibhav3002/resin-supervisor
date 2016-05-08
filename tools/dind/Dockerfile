@@ -6,6 +6,7 @@ VOLUME /resin-data
 RUN apt-get update \
 	&& apt-get install -y \
 	ifupdown \
+	rsync \
 	dropbear \
 	&& rm -rf /var/lib/apt/lists/*
 
